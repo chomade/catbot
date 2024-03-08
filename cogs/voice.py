@@ -1,6 +1,6 @@
 import os
-
 import discord
+
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -17,13 +17,13 @@ class Voice(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @app_commands.command(name="setup", description="Change the bot settings.")
-    @app_commands.checks.bot_has_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
+    @commands.hybrid_command(name="setup", description="Change the bot settings.")
+    @commands.bot_has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def setup(self, interaction: discord.Interaction):
         category_channel = await interaction.guild.create_category("음성 채널")
         ready_channel = await category_channel.create_voice_channel(name="방-생성하기")
-        id = interaction.guild_id
+        id = interaction.guild.id
         db.ids.insert_one(
             {
                 "guild_id": id,
@@ -31,7 +31,7 @@ class Voice(commands.Cog):
             }
         )
         embed = discord.Embed(description="음성 채널 설정이 완료되었습니다.", color=discord.Color.blurple())
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.reply(embed=embed, ephemeral=True)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
@@ -53,17 +53,6 @@ class Voice(commands.Cog):
                 await clone_channel.delete()
         except:
             pass
-
-    @setup.error
-    async def info_error(self, interaction: discord.Interaction, error):
-        if isinstance(error, app_commands.MissingPermissions):
-            embed = discord.Embed(description="권한이 없습니다.", color=discord.Color.red())
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-        elif isinstance(error, app_commands.BotMissingPermissions):
-            embed = discord.Embed(description="봇이 권한이 없습니다.", color=discord.Color.red())
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-        else:
-            raise error
 
 
 async def setup(bot):
