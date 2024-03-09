@@ -67,9 +67,15 @@ async def on_command_error(context: Context, error):
         await context.send(embed=embed, ephemeral=True)
     elif isinstance(error, commands.CommandNotFound):
         return
+    elif isinstance(error, app_commands.errors.CommandNotFound):
+        return
     elif isinstance(error, commands.MissingRequiredArgument):
-        embed = discord.Embed(title="Error!", description=str(error).capitalize(), color=discord.Color.red())
-        await context.send(embed=embed, ephemeral=True)
+        if error.param.name == "amount":
+            embed = discord.Embed(description="청소할 메시지의 수를 입력해주세요.", color=discord.Color.red())
+            await context.send(embed=embed, ephemeral=True)
+        else:
+            embed = discord.Embed(title="Error!", description=str(error).capitalize(), color=discord.Color.red())
+            await context.send(embed=embed, ephemeral=True)
     else:
         raise error
 

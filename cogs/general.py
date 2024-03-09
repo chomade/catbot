@@ -1,7 +1,4 @@
-import os
 import discord
-
-from discord import app_commands
 from discord.ext import commands
 
 
@@ -9,10 +6,13 @@ class General(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.hybrid_command(name="ping", description="Check the bot's latency.")
-    async def ping(self, interaction: discord.Interaction) -> None:
-        await interaction.reply("Pong!", ephemeral=True)
+    @commands.hybrid_command(name="핑", description="Change the bot settings.")
+    async def ping(self, ctx):
+        await ctx.reply("퐁! {0}ms".format(round(self.bot.latency * 1000)))
 
+    @commands.hybrid_command(name="청소", description="채팅을 청소합니다.", aliases=["clear"])
+    async def clear(self, interaction: discord.Interaction, amount: int):
+        await interaction.channel.purge(limit=amount)
 
 
 async def setup(bot):
