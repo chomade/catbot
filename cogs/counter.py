@@ -37,6 +37,7 @@ class Counter(commands.Cog):
                 member_count += 1
         if result is None:
             category_channel = await interaction.guild.create_category(name="서버 인원")
+            await category_channel.set_permissions(interaction.guild.default_role, connect=False, view_channel=True)
             all_member_channel = await category_channel.create_voice_channel(name=f"전체 인원: {bot_count + member_count}")
             member_channel = await category_channel.create_voice_channel(name=f"사람: {member_count}")
             bot_channel = await category_channel.create_voice_channel(name=f"봇: {bot_count}")
