@@ -3,6 +3,7 @@ import discord
 import os
 import sys
 import json
+import datetime
 
 from discord import app_commands
 from discord.ext import commands
@@ -24,12 +25,11 @@ intents = discord.Intents.all()
 
 bot = commands.Bot(command_prefix=command_prefix, intents=intents)
 
-initial_extensions = ['cogs.general', 'cogs.voice']
+initial_extensions = ['cogs.general', 'cogs.voice', 'cogs.counter']
 
 
 @bot.event
 async def on_ready():
-    print("Bot is ready!")
     await bot.change_presence(
         status=discord.Status.online,
         activity=discord.Activity(type=discord.ActivityType.playing, name=status)
@@ -41,6 +41,8 @@ async def on_ready():
         except Exception as e:
             print(f"Failed to load extension {extension}.", file=sys.stderr)
             traceback.print_exc()
+    await bot.tree.sync()
+    print("Bot is ready!")
 
 
 @bot.event

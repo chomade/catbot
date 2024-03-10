@@ -23,10 +23,10 @@ class Voice(commands.Cog):
     async def setup(self, interaction: discord.Interaction):
         category_channel = await interaction.guild.create_category("음성 채널")
         ready_channel = await category_channel.create_voice_channel(name="방-생성하기")
-        id = interaction.guild.id
+        guild_id = interaction.guild.id
         db.ids.insert_one(
             {
-                "guild_id": id,
+                "guild_id": guild_id,
                 "ready_channel_id": ready_channel.id,
             }
         )
